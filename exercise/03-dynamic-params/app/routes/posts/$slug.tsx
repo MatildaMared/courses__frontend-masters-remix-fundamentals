@@ -6,9 +6,11 @@ import { getPost } from "~/models/post.server";
 export async function loader({ params }: LoaderArgs) {
   const { slug } = params;
   invariant(slug, "Missing slug");
-  return json({
-    post: await getPost(slug),
-  });
+  const post = await getPost(slug);
+  if (!post) {
+    throw new Error("Post not found");
+  }
+  return json({ post });
 }
 
 export default function Post() {
