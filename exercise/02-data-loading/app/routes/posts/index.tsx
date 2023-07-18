@@ -1,7 +1,8 @@
+import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 
-export const loader = () => {
+export async function loader({ request }: LoaderArgs) {
   const data = {
     posts: [
       {
@@ -16,11 +17,10 @@ export const loader = () => {
   };
 
   return json(data.posts);
-};
+}
 
 export default function Posts() {
-  const  posts  = useLoaderData();
-  console.log(posts);
+  const posts = useLoaderData<typeof loader>();
   return (
     <main>
       <h1>Posts</h1>
