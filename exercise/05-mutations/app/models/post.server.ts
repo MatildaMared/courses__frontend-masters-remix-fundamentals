@@ -10,7 +10,7 @@ export async function getPost(slug: string) {
 
 // 🐨 export a new function called createPost which accepts a title, slug, and markdown
 // and returns the newly created post.
-export async function createPost(title: string, slug: string, markdown: string) {
+export async function createPost({ title, slug, markdown }: any) {
   return prisma.post.create({ data: { title, slug, markdown } });
 }
 

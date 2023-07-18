@@ -15,8 +15,8 @@ export async function action({ request, params }: ActionArgs) {
   const title = formData.get("title");
   const slug = formData.get("slug");
   const markdown = formData.get("markdown");
-  const newPost = await createPost(title, slug, markdown);
-  return redirect(`/posts/${newPost.slug}`);
+  await createPost({ title, slug, markdown });
+  return redirect(`/posts/admin`);
 }
 
 const inputClassName = `w-full rounded border border-gray-500 px-2 py-1 text-lg`;
