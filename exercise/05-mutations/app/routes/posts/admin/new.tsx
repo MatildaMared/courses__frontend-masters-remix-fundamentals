@@ -5,23 +5,37 @@
 // 4. call the createPost function from your post.model.ts
 
 import type { ActionArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { Form } from "@remix-run/react";
+import { json, redirect } from "@remix-run/node";
+import { Form, useActionData } from "@remix-run/react";
 import { createPost } from "~/models/post.server";
 
 // 5. redirect to "/posts/admin".
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request }: ActionArgs) {
   const formData = await request.formData(); // <-- 📜 learn more https://mdn.io/formData
   const title = formData.get("title");
   const slug = formData.get("slug");
   const markdown = formData.get("markdown");
-  await createPost({ title, slug, markdown });
-  return redirect(`/posts/admin`);
+
+  const errors = {
+    title: title ? null : "Title is required",
+    slug: slug ? null : "Slug is required",
+    markdown: markdown ? null : "Markdown is required",
+  };
+
+  const hasErrors = Object.values(errors).some(Boolean);
+
+  if (hasErrors) {
+    return json({ errors });
+  } else {
+    await createPost({ title, slug, markdown });
+    return redirect(`/posts/admin`);
+  }
 }
 
 const inputClassName = `w-full rounded border border-gray-500 px-2 py-1 text-lg`;
 
 export default function NewPost() {
+  const actionData = useActionData<typeof action>();
   return (
     // 🐨 change this to a <Form /> component from @remix-run/react
     // 🐨 and add method="post" to the form.
@@ -30,12 +44,18 @@ export default function NewPost() {
         <label>
           Post Title:{" "}
           <input type="text" name="title" className={inputClassName} />
+          {actionData?.errors?.title ? (
+            <em className="text-red-600">{actionData.errors?.title}</em>
+          ) : null}
         </label>
       </p>
       <p>
         <label>
           Post Slug:{" "}
           <input type="text" name="slug" className={inputClassName} />
+          {actionData?.errors?.slug ? (
+            <em className="text-red-600">{actionData.errors?.title}</em>
+          ) : null}
         </label>
       </p>
       <p>
@@ -47,6 +67,9 @@ export default function NewPost() {
           name="markdown"
           className={`${inputClassName} font-mono`}
         />
+        {actionData?.errors?.markdown ? (
+          <em className="text-red-600">{actionData.errors?.title}</em>
+        ) : null}
       </p>
       <p className="text-right">
         <button
