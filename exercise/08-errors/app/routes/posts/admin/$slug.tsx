@@ -7,6 +7,7 @@ import {
   useTransition,
 } from "@remix-run/react";
 import invariant from "tiny-invariant";
+import { ErrorFallback } from "~/components";
 
 import {
   createPost,
@@ -154,3 +155,12 @@ export default function PostAdmin() {
 
 // 🐨 Add an ErrorBoundary component to this
 // 💰 You can use the ErrorFallback component from "~/components"
+export function ErrorBoundary({ error }: { error: Error }) {
+  console.error(error);
+
+  return (
+    <ErrorFallback>
+      <p>{error.message}</p>
+    </ErrorFallback>
+  );
+}
