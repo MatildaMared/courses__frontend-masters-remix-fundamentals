@@ -40,6 +40,7 @@ export default function PostAdmin() {
         <main className="col-span-4 md:col-span-3">
           <Outlet />
         </main>
+        <p>{window.ENV.ADMIN_EMAIL}</p>
       </div>
     </div>
   );
