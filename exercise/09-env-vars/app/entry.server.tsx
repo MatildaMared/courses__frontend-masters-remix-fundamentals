@@ -1,8 +1,10 @@
 import type { EntryContext } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
+import { getEnv } from "env.server";
 import { renderToString } from "react-dom/server";
 
 // 🐨 set global.ENV to getEnv() from ./env.server
+global.ENV = getEnv();
 
 export default function handleRequest(
   request: Request,
